@@ -1,7 +1,7 @@
 startup_message off
 autodetach on
 defutf8 on
-idle 120 lockscreen
+idle 300 lockscreen
 backtick 1 60 60 whoami
 terminfo rxvt-unicode
 
