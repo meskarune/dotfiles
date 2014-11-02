@@ -1,17 +1,23 @@
-# Lines configured by zsh-newuser-install
-HISTFILE=~/.histfile
-HISTSIZE=1000
-SAVEHIST=1000
-setopt appendhistory autocd beep extendedglob nomatch notify
-bindkey -v
-# End of lines configured by zsh-newuser-install
-
 # The following lines were added by compinstall
+
+zstyle ':completion:*' completer _expand _complete _ignored
+zstyle ':completion:*' list-colors ''
+zstyle ':completion:*' matcher-list '' 'm:{[:lower:][:upper:]}={[:upper:][:lower:]}' 'r:|[._-`'\'',.]=** r:|=**' 'l:|=* r:|=*'
+zstyle ':completion:*' original true
+zstyle ':completion:*' verbose true
 zstyle :compinstall filename '/home/meskarune/.zshrc'
 
 autoload -Uz compinit
 compinit
 # End of lines added by compinstall
+# Lines configured by zsh-newuser-install
+HISTFILE=~/.histfile
+HISTSIZE=4000
+SAVEHIST=4000
+setopt notify
+unsetopt beep
+bindkey -v
+# End of lines configured by zsh-newuser-install
 
 # Export Settings
 
@@ -21,17 +27,25 @@ export EDITOR="vim"
 
 # Command Aliases
 
-alias ls='ls --color=auto -phF'
+alias ls='ls --color=auto -aphF'
 alias la='ls -a'
 alias ll='ls -l'
 alias lla='ls -la'
+alias home='cd ~/'
 alias openports='netstat -nape --inet'
 alias diskspace='du -h --max-depth=1'
 alias nyancat='telnet miku.acm.uiuc.edu'
 alias grep='grep --color'
 alias untar='tar -zxvf'
-
+alias cone='TERM=xterm cone'
+alias news='newsbeuter'
+alias define='sdcv'
+alias shack='telnet velvet.ath.cx'
+alias weather='inxi -xxxW galloway,nj'
 # SSH Aliases
+alias maharani='mosh meskarune@meskarune.com'
+alias aw-web='ssh meskarune@archwomen.org'
+alias aw-data='ssh meskarune@dataserver.archwomen.org'
 
 # Text Colors
 fg_black=%{$'\e[0;30m'%}
@@ -77,4 +91,10 @@ at_blinkoff=%{$'\e[25m'%}
 at_reverseoff=%{$'\e[27m'%}
 at_strikeoff=%{$'\e[29m'%}
 
-PROMPT="${fg_yellow}%n ${fg_lblue}%~ ${fg_lgreen}$ ${at_normal}"
+# Command Prompt
+if [ -z "$STY" ]
+    then
+        PROMPT="${fg_yellow}%n ${fg_lblue}%~ ${fg_lgreen}$ ${at_normal}"
+    else
+        PROMPT="${fg_lblue}%~ ${fg_lgreen}$ ${at_normal}"
+fi
