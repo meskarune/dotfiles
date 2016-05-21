@@ -1,0 +1,167 @@
+# The following lines were added by compinstall
+
+zstyle ':completion:*' completer _expand _complete _ignored
+zstyle ':completion:*' list-colors ''
+zstyle ':completion:*' matcher-list '' 'm:{[:lower:][:upper:]}={[:upper:][:lower:]}' 'r:|[._-`'\'',.]=** r:|=**' 'l:|=* r:|=*'
+zstyle ':completion:*' original true
+zstyle ':completion:*' verbose true
+zstyle :compinstall filename '/home/meskarune/.zshrc'
+
+autoload -Uz compinit
+compinit
+# End of lines added by compinstall
+# Lines configured by zsh-newuser-install
+setopt HIST_IGNORE_DUPS
+HISTFILE=~/.histfile
+HISTSIZE=4000
+SAVEHIST=4000
+setopt notify
+unsetopt beep
+bindkey -v
+# End of lines configured by zsh-newuser-install
+
+# Export Settings
+
+export LANG="en_US.UTF-8"
+export TZ="/usr/share/zoneinfo/America/New_York"
+export EDITOR="vim"
+export PAGER="less"
+export VIRTUAL_ENV_DISABLE_PROMPT=1
+export LESS_TERMCAP_mb=$'\E[01;31m'
+export LESS_TERMCAP_md=$'\E[01;31m'
+export LESS_TERMCAP_me=$'\E[0m'
+export LESS_TERMCAP_se=$'\E[0m'
+export LESS_TERMCAP_so=$'\E[01;44;33m'
+export LESS_TERMCAP_ue=$'\E[0m'
+export LESS_TERMCAP_us=$'\E[01;32m'
+
+# Command Aliases, disable alias with \
+
+alias ls='ls -GaphF'
+alias la='ls -a'
+alias ll='ls -l'
+alias lla='ls -la'
+alias home='cd ~/'
+alias openports='netstat -nape --inet'
+alias diskspace='du -h --max-depth=1'
+alias nyancat='telnet miku.acm.uiuc.edu'
+alias grep='grep --color=auto'
+alias untar='tar -zxvf'
+alias cone='TERM=xterm cone'
+alias shack='telnet velvet.ath.cx'
+alias weather='curl wttr.in'
+alias inxi-weather='inxi -xxxW galloway,nj'
+alias fuck='$(thefuck $(fc -ln -1))'
+alias vless='/usr/share/vim/vim74/macros/less.sh'
+alias gitpkg=' pacman -Qm | grep -Po "^.*-git*"'
+alias tt='tmux new-session -d -n main'
+
+#Functions
+
+# run "up" to "cd .." or "up 6" to "cd ../../../../../.."
+function up {
+    if [[ "$#" < 1 ]] ; then
+        cd ..
+    else
+        CDSTR=""
+        for i in {1..$1} ; do
+            CDSTR="../$CDSTR"
+        done
+        cd $CDSTR
+    fi
+}
+
+function x() {
+    if [ -f "$1" ] ; then
+        case "$1" in
+            *.tar.bz2)  tar xjf "$1"      ;;
+            *.tar.gz)   tar xzf "$1"      ;;
+            *.tar.Z)    tar xzf "$1"      ;;
+            *.bz2)      bunzip2 "$1"      ;;
+            *.rar)      unrar x "$1"      ;;
+            *.gz)       gunzip "$1"       ;;
+            *.jar)      unzip "$1"        ;;
+            *.tar)      tar xf "$1"       ;;
+            *.tbz2)     tar xjf "$1"      ;;
+            *.tgz)      tar xzf "$1"      ;;
+            *.zip)      unzip "$1"        ;;
+            *.Z)        uncompress "$1"   ;;
+            *)          echo "'$1' cannot be extracted" ;;
+        esac
+    else
+        echo "'$1' is not a file"
+    fi
+}
+
+#Prompt
+setopt prompt_subst
+autoload -Uz colors && colors
+
+fg_alert=%{$'\e[38;5;161m'%}
+at_normal=%{$'\e[0m'%}
+
+function virtualenv_info {
+    [ $VIRTUAL_ENV ] && echo "[ %{$fg[magenta]%}virt:%{$reset_color%} "$(basename $VIRTUAL_ENV)" ] "
+}
+
+GIT_PROMPT_SYMBOL="%{$fg[green]%}git:"
+GIT_PROMPT_CLEAN="%{$fg_bold[green]%}-"
+GIT_PROMPT_AHEAD="%{$fg_bold[yellow]%}> NUM"
+GIT_PROMPT_BEHIND="%{$fg_bold[yellow]%}< NUM"
+GIT_PROMPT_MERGING="%{$fg_bold[magenta]%}Y"
+GIT_PROMPT_UNTRACKED="${fg_alert}!"
+GIT_PROMPT_MODIFIED="${fg_alert}+"
+GIT_PROMPT_STAGED="%{$fg_bold[blue]%}="
+
+function parse_git_branch() {
+    (git symbolic-ref -q HEAD || git name-rev --name-only --no-undefined --always HEAD) 2> /dev/null
+}
+GIT_PROMPT_SYMBOL="%{$fg[green]%}git:"
+GIT_PROMPT_CLEAN="%{$fg_bold[green]%}-"
+GIT_PROMPT_AHEAD="%{$fg_bold[yellow]%}> NUM"
+GIT_PROMPT_BEHIND="%{$fg_bold[yellow]%}< NUM"
+GIT_PROMPT_MERGING="%{$fg_bold[magenta]%}Y"
+GIT_PROMPT_UNTRACKED="${fg_alert}!"
+GIT_PROMPT_MODIFIED="${fg_alert}+"
+GIT_PROMPT_STAGED="%{$fg_bold[blue]%}="
+
+function parse_git_branch() {
+    (git symbolic-ref -q HEAD || git name-rev --name-only --no-undefined --always HEAD) 2> /dev/null
+}
+function parse_git_state() {
+    local GIT_STATE=""
+    local NUM_AHEAD="$(git log --oneline @{u}.. 2> /dev/null | wc -l | tr -d ' ')"
+        if [ "$NUM_AHEAD" -gt 0 ]; then
+            GIT_STATE=$GIT_STATE${GIT_PROMPT_AHEAD//NUM/$NUM_AHEAD}
+        fi
+    local NUM_BEHIND="$(git log --oneline ..@{u} 2> /dev/null | wc -l | tr -d ' ')"
+        if [ "$NUM_BEHIND" -gt 0 ]; then
+            GIT_STATE=$GIT_STATE${GIT_PROMPT_BEHIND//NUM/$NUM_BEHIND}
+        fi
+    local GIT_DIR="$(git rev-parse --git-dir 2> /dev/null)"
+        if [ -n $GIT_DIR ] && test -r $GIT_DIR/MERGE_HEAD; then
+            GIT_STATE=$GIT_STATE$GIT_PROMPT_MERGING
+        fi
+    if [[ -n $(git ls-files --other --exclude-standard 2> /dev/null) ]]; then
+        GIT_STATE=$GIT_STATE$GIT_PROMPT_UNTRACKED
+    fi
+    if ! git diff --quiet 2> /dev/null; then
+        GIT_STATE=$GIT_STATE$GIT_PROMPT_MODIFIED
+    fi
+    if ! git diff --cached --quiet 2> /dev/null; then
+        GIT_STATE=$GIT_STATE$GIT_PROMPT_STAGED
+    fi
+    if [ -z "$(git status --porcelain)" ]; then
+        GIT_STATE=$GIT_STATE$GIT_PROMPT_CLEAN
+    fi
+    if [[ -n $GIT_STATE ]]; then
+        echo "$GIT_STATE"
+    fi
+}
+function git_prompt_string() {
+    local git_where="$(parse_git_branch)"
+    [ -n "$git_where" ] && echo "[ $GIT_PROMPT_SYMBOL %{$reset_color%}${git_where#(refs/heads/|tags/)} $(parse_git_state)%{$reset_color%} ] "
+}
+
+PROMPT='%{$fg_bold[yellow]%}%n%{$reset_color%}@%{$fg_bold[magenta]%}%m %{$fg_bold[blue]%}%4~%{$reset_color%} $(git_prompt_string)$(virtualenv_info)%# '
+RPROMPT="%* [%{$fg_no_bold[yellow]%}%?%{$reset_color%}]"
