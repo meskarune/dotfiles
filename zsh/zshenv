@@ -1,0 +1,23 @@
+if [ -n "$DESKTOP_SESSION" ];then
+     eval $(gnome-keyring-daemon --start --components=ssh)
+     export SSH_AUTH_SOCK
+else
+    export SSH_AUTH_SOCK=/tmp/$USER.agent
+    ssh-agent -a /tmp/$USER.agent > /dev/null 2>&1
+fi
+
+export LANG="en_US.UTF-8"
+export TZ="/usr/share/zoneinfo/America/New_York"
+export EDITOR="vim"
+export PATH="$PATH:/home/meskarune/scripts"
+
+export VIRTUAL_ENV_DISABLE_PROMPT=1
+
+# Less colors for man pages
+export LESS_TERMCAP_mb=$'\E[01;31m'
+export LESS_TERMCAP_md=$'\E[01;31m'
+export LESS_TERMCAP_me=$'\E[0m'
+export LESS_TERMCAP_se=$'\E[0m'
+export LESS_TERMCAP_so=$'\E[01;44;33m'
+export LESS_TERMCAP_ue=$'\E[0m'
+export LESS_TERMCAP_us=$'\E[01;32m'

@@ -20,35 +20,22 @@ unsetopt beep
 bindkey -v
 # End of lines configured by zsh-newuser-install
 
-# Export Settings
-
-export LANG="en_US.UTF-8"
-export TZ="/usr/share/zoneinfo/America/New_York"
-export EDITOR="vim"
-export PAGER="less"
-export VIRTUAL_ENV_DISABLE_PROMPT=1
-export LESS_TERMCAP_mb=$'\E[01;31m'
-export LESS_TERMCAP_md=$'\E[01;31m'
-export LESS_TERMCAP_me=$'\E[0m'
-export LESS_TERMCAP_se=$'\E[0m'
-export LESS_TERMCAP_so=$'\E[01;44;33m'
-export LESS_TERMCAP_ue=$'\E[0m'
-export LESS_TERMCAP_us=$'\E[01;32m'
-
 # Command Aliases, disable alias with \
 
-alias ls='ls -GaphF'
+#alias ls='ls --color=auto --group-directories-first -aphF' # gnu
+alias ls='ls -GaphF' # bsd
 alias la='ls -a'
 alias ll='ls -l'
 alias lla='ls -la'
+alias grep='grep -i --color=auto' # case insensitive grep
+alias grepfiles='grep -riP --color=auto' # list all matches in all files in a dir
+alias grepdir='grep -rilP --color=auto' # list all files with a match in a dir
+alias pgrep='grep -iP --color=auto' # perl regrex grep case insensitive
 alias home='cd ~/'
+alias open='xdg-open'
+
 alias openports='netstat -nape --inet'
 alias diskspace='du -h --max-depth=1'
-alias nyancat='telnet miku.acm.uiuc.edu'
-alias grep='grep --color=auto'
-alias untar='tar -zxvf'
-alias cone='TERM=xterm cone'
-alias shack='telnet velvet.ath.cx'
 alias weather='curl wttr.in'
 alias inxi-weather='inxi -xxxW galloway,nj'
 alias fuck='$(thefuck $(fc -ln -1))'
@@ -94,6 +81,7 @@ function x() {
 }
 
 #Prompt
+export VIRTUAL_ENV_DISABLE_PROMPT=1
 setopt prompt_subst
 autoload -Uz colors && colors
 
@@ -103,27 +91,29 @@ at_normal=%{$'\e[0m'%}
 function virtualenv_info {
     [ $VIRTUAL_ENV ] && echo "[ %{$fg[magenta]%}virt:%{$reset_color%} "$(basename $VIRTUAL_ENV)" ] "
 }
-
-GIT_PROMPT_SYMBOL="%{$fg[green]%}git:"
-GIT_PROMPT_CLEAN="%{$fg_bold[green]%}-"
-GIT_PROMPT_AHEAD="%{$fg_bold[yellow]%}> NUM"
-GIT_PROMPT_BEHIND="%{$fg_bold[yellow]%}< NUM"
-GIT_PROMPT_MERGING="%{$fg_bold[magenta]%}Y"
-GIT_PROMPT_UNTRACKED="${fg_alert}!"
-GIT_PROMPT_MODIFIED="${fg_alert}+"
-GIT_PROMPT_STAGED="%{$fg_bold[blue]%}="
-
-function parse_git_branch() {
-    (git symbolic-ref -q HEAD || git name-rev --name-only --no-undefined --always HEAD) 2> /dev/null
+function virtualenv_info {
+    [ $VIRTUAL_ENV ] && echo "[ %{$fg[magenta]%}virt:%{$reset_color%} "$(basename $VIRTUAL_ENV)" ] "
 }
-GIT_PROMPT_SYMBOL="%{$fg[green]%}git:"
-GIT_PROMPT_CLEAN="%{$fg_bold[green]%}-"
-GIT_PROMPT_AHEAD="%{$fg_bold[yellow]%}> NUM"
-GIT_PROMPT_BEHIND="%{$fg_bold[yellow]%}< NUM"
-GIT_PROMPT_MERGING="%{$fg_bold[magenta]%}Y"
-GIT_PROMPT_UNTRACKED="${fg_alert}!"
-GIT_PROMPT_MODIFIED="${fg_alert}+"
-GIT_PROMPT_STAGED="%{$fg_bold[blue]%}="
+
+if [[ ${TERM} == "linux" ]]; then
+    GIT_PROMPT_SYMBOL="%{$fg[green]%}git:"
+    GIT_PROMPT_CLEAN="%{$fg_bold[green]%}-"
+    GIT_PROMPT_AHEAD="%{$fg_bold[yellow]%}> NUM"
+    GIT_PROMPT_BEHIND="%{$fg_bold[yellow]%}< NUM"
+    GIT_PROMPT_MERGING="%{$fg_bold[magenta]%}Y"
+    GIT_PROMPT_UNTRACKED="${fg_alert}!"
+    GIT_PROMPT_MODIFIED="${fg_alert}+"
+    GIT_PROMPT_STAGED="%{$fg_bold[blue]%}="
+else
+    GIT_PROMPT_SYMBOL="%{$fg[green]%} "
+    GIT_PROMPT_CLEAN="%{$fg_bold[green]%}✔ "
+    GIT_PROMPT_AHEAD="%{$fg_bold[yellow]%}🡩 NUM "
+    GIT_PROMPT_BEHIND="%{$fg_bold[yellow]%}🡩 NUM "
+    GIT_PROMPT_MERGING="%{$fg_bold[magenta]%}🜉 "
+    GIT_PROMPT_UNTRACKED="${fg_alert}✗ "
+    GIT_PROMPT_MODIFIED="${fg_alert}➕ "
+    GIT_PROMPT_STAGED="%{$fg_bold[blue]%}🟓 "
+fi
 
 function parse_git_branch() {
     (git symbolic-ref -q HEAD || git name-rev --name-only --no-undefined --always HEAD) 2> /dev/null
