@@ -9,21 +9,24 @@ hc() {
 hc emit_hook reload
 
 xsetroot -solid '#215668'
+nitrogen --restore &
 
 # remove all existing keybindings
 hc keyunbind --all
 
 # keybindings
-# if you have a super key you will be much happier with Mod set to Mod4
 #Mod=Mod1    # Use alt as the main modifier
 Mod=Mod4   # Use the super key as the main modifier
 
 hc keybind $Mod-Shift-q quit
 hc keybind $Mod-Shift-r reload
 hc keybind $Mod-Shift-c close
-hc keybind $Mod-Return spawn urxvt
+hc keybind $Mod-Return spawn termite
 hc keybind $Mod-z spawn pcmanfm
-hc keybind $Mod-<F3> spawn gmrun
+hc keybind $Mod-F3 spawn gmrun
+hc keybind Control-space spawn rofi -config /home/meskarune/.config/rofi.conf -show run
+hc keybind XF86MonBrightnessUp spawn enlighten +5%
+hc keybind XF86MonBrightnessDown spawn enlighten -5%
 
 # basic movement
 # focusing clients
@@ -64,9 +67,12 @@ hc keybind $Mod-Control-Down    resize down +$resizestep
 hc keybind $Mod-Control-Up      resize up +$resizestep
 hc keybind $Mod-Control-Right   resize right +$resizestep
 
+hc set default_frame_layout 1
+
 # tags
-tag_names=( {1..6} )
-tag_keys=( {1..6} 0 )
+#TAG_NAMES=( "main" "notes" "music" "ssh" "browser" "misc" "edit" "chat" "im")
+tag_names=( {1..9} )
+tag_keys=( {1..9} 0 )
 
 hc rename default "${tag_names[0]}" || true
 for i in ${!tag_names[@]} ; do
@@ -81,14 +87,10 @@ done
 # cycle through tags
 hc keybind $Mod-period use_index +1 --skip-visible
 hc keybind $Mod-comma  use_index -1 --skip-visible
-hc keybind $Mod-Right  use_index +1 --skip-visible
-hc keybind $Mod-Left   use_index -1 --skip visible
 
 # layouting
 hc keybind $Mod-r remove
 hc keybind $Mod-space cycle_layout 1
-hc keybind $Mod-v split vertical 0.5
-hc keybind $Mod-h split horizontal 0.5
 hc keybind $Mod-s floating toggle
 hc keybind $Mod-f fullscreen toggle
 hc keybind $Mod-p pseudotile toggle
@@ -109,33 +111,26 @@ hc keybind $Mod-i jumpto urgent
 # theme
 hc attr theme.tiling.reset 1
 hc attr theme.floating.reset 1
-#hc set frame_border_active_color '#215668' #dark blue
-#hc set frame_border_normal_color '#101010' #grey
-#hc set frame_bg_normal_color '#215668' #dark blue
-#hc set frame_bg_active_color '#83b8e7' #light blue
+hc set frame_border_active_color '#222222'
+hc set frame_border_normal_color '#101010'
 hc set frame_border_width 0
 hc set window_border_width 1
-hc set window_border_normal_color '#83b8e7'
-hc set window_border_active_color '#215668'
-#hc set window_border_normal_color '#215668'
-#hc set window_border_active_color '#83b8e7'
-
 hc set always_show_frame 0
 hc set frame_bg_transparent 1
 hc set frame_transparent_width 0
-hc set frame_gap 2
+hc set frame_gap 1
 
-hc attr theme.active.color '#215668'
-hc attr theme.normal.color '#101010'
+hc attr theme.active.color '#9fbc00'
+hc attr theme.normal.color '#262626'
 hc attr theme.urgent.color orange
 hc attr theme.inner_width 1
-hc attr theme.inner_color '#215668'
+hc attr theme.inner_color '#262626'
 hc attr theme.border_width 1
-hc attr theme.floating.border_width 4
+hc attr theme.floating.border_width 1
 hc attr theme.floating.outer_width 1
-hc attr theme.floating.outer_color black
-hc attr theme.active.inner_color '#474747'
-hc attr theme.active.outer_color '#474747'
+hc attr theme.floating.outer_color '#262626'
+hc attr theme.active.inner_color '#111111'
+hc attr theme.active.outer_color '#111111'
 hc attr theme.background_color '#141414'
 
 hc set window_gap 4
@@ -154,33 +149,42 @@ hc rule focus=on # normally focus new clients
 hc rule windowtype~'_NET_WM_WINDOW_TYPE_(DIALOG|UTILITY|SPLASH)' pseudotile=on
 hc rule windowtype='_NET_WM_WINDOW_TYPE_DIALOG' focus=on
 hc rule windowtype~'_NET_WM_WINDOW_TYPE_(NOTIFICATION|DOCK|DESKTOP)' manage=off
-hc rule class~'[Ww]bar' manage=off
-hc rule class~'[Cc]onky' manage=off
-hc rule class~'[Gg]mrun' pseudotile=on
+hc rule class~'[Cc]onky'      manage=off
+hc rule class~'[Tt]int2'      manage=off
+hc rule class~'[Gg]alculator' pseudotile=on
+hc rule class~'[Gg]mrun'      pseudotile=on
+hc rule class~'[Kk]upfer'     pseudotile=on
+hc rule class~'[Pp]nmixer'    pseudotile=on
+hc rule class~'[Nn]m-applet'   pseudotile=on
+hc rule class~'[Pp]aramano'   pseudotile=on
+hc rule class~'[Gg]simplecal' pseudotile=on
+hc rule class~'[Ss]onata'     pseudotile=on
 
-#Padding for tint2 and Conky
-hc pad 0 26 0 19 0
+imtag=9 # just set the name of the tag here
+hc load "$imtag" '(split horizontal:0.740000:0 (clients grid:0) (clients vertical:0))'
+hc rule class=Pidgin    windowrole=buddy_list tag=$imtag index=1 focus=off
+hc rule class=Pidgin  ! windowrole=buddy_list tag=$imtag index=0
+hc rule class=Empathy   windowrole=contact_list tag=$imtag index=1
+hc rule class=Empathy ! windowrole=contact_list  tag=$imtag index=0
+hc rule class=Empathy-Chat tag=$imtag index=0
 
-# start tint2 and kill/restart on hlwm reload
+# padding for tint2 and conky
+hc pad 0 23 0 14 0
+
+# start tint2 and system tray applications
 {
-    pids=( )
-    # start the panel and remember its pid
-    tint2 &
-    pids+=( $! )
-    # wait until the panel should be stopped
+    pids=()
+    for program in tint2 nm-applet redshift-gtk xfce4-clipman blueman-applet paramano pnmixer nvdock conky 'conky -c /home/meskarune/.conky2rc'; do
+        $program &
+        pids+=( $! )
+    done
     herbstclient -w '(quit_panel|reload)'
-    # stopp all started panels
     kill ${pids[@]}
 } &
 
 #Autostart Programs
-#xcompmgr -c -r10 -F -f -D5 -C -o0.8 &
-nitrogen --restore &
-wicd-gtk &
-pnmixer &
-paramano &
-kupfer &
-conky &
+compton --config ~/.config/compton.conf -b
+xautolock -time 5 -locker 'i3lock-fancy -g -- maim' -detectsleep -corners 0-+0 &
 
 # unlock, just to be sure
 hc unlock
