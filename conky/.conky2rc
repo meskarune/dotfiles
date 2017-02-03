@@ -1,0 +1,52 @@
+-- vim: ts=4 sw=4 noet ai cindent syntax=lua
+conky.config = {
+    alignment = 'bottom_middle',
+    background = false,
+    border_width = 0,
+    cpu_avg_samples = 2,
+    default_color = '86b5ea',
+    default_outline_color = 'white',
+    default_shade_color = 'cccccc',
+    double_buffer = true,
+    draw_borders = false,
+    draw_graph_borders = false,
+    draw_outline = false,
+    draw_shades = false,
+    use_xft = true,
+    font = 'Dejavu Sans:normal:size=8',
+    gap_x = 2,
+    gap_y = 2,
+    minimum_height = 2,
+    minimum_width = 900,
+    net_avg_samples = 2,
+    no_buffers = true,
+    out_to_console = false,
+    out_to_stderr = false,
+    extra_newline = false,
+    own_window = true,
+    -- own_window_argb_value = 120,
+    own_window_class = 'Conky',
+    -- own_window_color = '000000',
+    own_window_transparent = true,
+    own_window_type = 'desktop',
+    stippled_borders = 0,
+    update_interval = 1.0,
+    uppercase = false,
+    use_spacer = 'none',
+    show_graph_scale = false,
+    show_graph_range = false
+}
+
+conky.text = [[
+${color #cccccc}  Uptime:${color} $uptime    \
+${color #cccccc}CPU:${color} ${cpu cpu0}%  ${color #cccccc}CPU Temp:${color} \
+${execi 60 acpi -t | cut -c 16-17 | awk '{print $1}{exit}'}°C    \
+${color #cccccc}Mem:${color} ${memperc}%  ${color #cccccc}Swap:${color} $swapperc%    \
+${color #cccccc}HDD Temp:${color} ${execi 60 nc localhost 7634 | awk -F'|' '{print $4 "°C"}' }    \
+${color #cccccc}Root:${color} ${fs_used /}/ ${fs_size /}  \
+${color #cccccc}Home:${color} ${fs_used /home}/ ${fs_size /home}    \
+${color #cccccc}Updates:${color} ${execpi 12000 checkupdates | wc -l}    \
+${color #cccccc}Weather:${color} ${execpi 3600 ~/scripts/weather.lua}    \
+${color #cccccc}IP:${color} ${execpi 43200 ip addr show wlp3s0 | awk 'NR==3 {print substr($2, 1, length($2)-3)}'}    \
+${color #cccccc}Network:${color} ⬇${downspeed wlp3s0} ⬆${upspeed wlp3s0o}
+]]
