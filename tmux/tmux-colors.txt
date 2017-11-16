@@ -1,0 +1,10 @@
+   These follow terminal colorscheme    |         Other useful colors
+-------------------------------------------------------------------------------
+black      | brightblack:    colour8    |    true black:             colour232
+red        | brightred:      colour9    |    grey:                   colour244
+green      | brightgreen:    colour10   |    darkgrey:               colour236
+yellow     | brightyellow:   colour11   |    lightgrey:              colour250
+blue       | brightblue:     colour12   |    true white:             colour255
+magenta    | brightmagenta:  colour13   |    error red:              colour160
+cyan       | brightcyan:     colour14   |    warning yellow:         colour220
+white      | brightwhite:    colour15   |    traffic light green:    colour46

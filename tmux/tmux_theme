@@ -1,28 +1,33 @@
-set -g pane-active-border-fg cyan
+set -g pane-active-border-fg "colour14"
 set -g pane-border-fg "colour239"
 
 set -g message-fg black
-set -g message-bg cyan
+set -g message-bg "colour14"
 
 set -g status-justify left
 set -g status-bg "colour236"
-set -g status-fg white 
+set -g status-fg "colour14"
 
-setw -g clock-mode-colour cyan
+setw -g clock-mode-colour "colour14"
 
 setw -g status-left " #S "
 setw -g status-left-fg black
-setw -g status-left-bg cyan
+setw -g status-left-bg "colour14"
 
-set -g status-right "#[bg=colour239] %a %B %-d, %Y #[fg=cyan].:. #[fg=white]%H:%M #[fg=black,bg=cyan] #h "
+set -g status-right-length "100"
+# 24 hour time: `%H:%M`
+# 12 hour time: `%-I:%M %p`
+set -g status-right "#[bg=colour239]#[fg=white] %a %B %-d, %Y #[fg=colour14].:. #[fg=white]%H:%M #[fg=black,bg=colour14] #h "
 
-setw -g window-status-format " #I: #W "
+setw -g window-status-format "  #I: #W ⎹"
+# separator symbols: ┃ ║ │ ❮  ❯ ╲ ╱ left bar: ⎸ right bar: ⎹
 setw -g window-status-separator ""
-setw -g window-status-fg cyan
+setw -g window-status-fg "colour14"
+#setw -g window-status-fg "colour244"
 
-setw -g window-status-current-format " #I: #W "
 setw -g window-status-current-fg white
 setw -g window-status-current-bg "colour239"
+setw -g window-status-current-format "#[fg="colour14"]┃ #[fg=white]#I: #W#[fg=colour14] ┃"
 
-setw -g window-status-bell-fg "colour236" 
+setw -g window-status-bell-fg "colour9"
 setw -g window-status-activity-fg yellow
