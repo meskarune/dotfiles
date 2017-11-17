@@ -1,0 +1,190 @@
+" Colors and syntax highlighting
+set t_Co=256
+syntax on
+set background=dark
+colorscheme jellybeans
+set nocompatible
+
+"Turn off annoying bell
+set noerrorbells visualbell t_vb=
+" Turn on line numbers
+set number
+" Turn off line wrapping
+set nowrap
+" Indentation settings
+set autoindent
+set copyindent
+" Set indent to 4 spaces and tab width to 4 spaces
+autocmd FileType * set tabstop=4 | set shiftwidth=4 | set softtabstop=4
+" Set indent and tab width to 2 spaces for html, css and php
+autocmd FileType html set tabstop=2 | set shiftwidth=2 | set softtabstop=2
+autocmd FileType php set tabstop=2 | set shiftwidth=2 | set softtabstop=2
+autocmd FileType css set tabstop=2 | set shiftwidth=2 | set softtabstop=2
+set expandtab
+" Text formating
+set textwidth=80
+set colorcolumn=80
+highlight ColorColumn guibg=#333333 ctermbg=237
+set wrapscan
+" Search lower and upper case
+set smartcase
+set incsearch
+set infercase
+set hlsearch
+set backspace=2
+set showmatch
+set formatoptions=l
+" Vim command completion
+set wildmode=longest,list,full
+set wildmenu
+" Set encoding
+set encoding=utf-8
+"Always show status line
+set laststatus=2
+set showmode
+
+set mouse=a
+
+" Code Folding
+set foldenable
+set foldlevelstart=4
+set foldnestmax=12
+set foldmethod=indent
+
+if has('persistent_undo')
+    set undodir=$HOME/.vim/undo
+    set undofile
+    set undolevels=1000
+    set undoreload=10000
+endif
+set backupdir=$HOME/.vim/backups
+set dir=$HOME/.vim/swap
+
+" Highlight current line and allow editing past last character
+set cursorline
+hi CursorLine term=none guibg=#1c1c1c ctermbg=0
+set virtualedit=onemore
+
+" Keep 5 lines above/below and left/right when scrolling
+set scrolloff=5
+set sidescrolloff=5
+
+" Change leader key to , (default is \)
+let mapleader = ","
+
+" Write a readonly file using sudo
+cmap w!! %!sudo tee > /dev/null %
+
+" Toggle Paste Mode
+set pastetoggle=<F2>
+
+" Toggle number from normal to relative
+map <F3> :set relativenumber!<CR>
+
+" Toggle show number
+nnoremap <leader>N :set number!<CR>
+
+" Show tabs and trailing spaces, toggle with F4
+map <F4> :set list!<CR>
+set list listchars=tab:»-,nbsp:·,eol:¶,trail:§
+
+" Toggle spell check with F5
+map <F5> :setlocal spell! spelllang=en_us<CR>
+
+" Remove all spaces at eol
+nnoremap <leader>S :%s/\s\+$//<cr>:let @/=''<CR>
+
+" Gvim settings
+set guifont=Fira\ Mono\ 12
+
+set guioptions-=m  "remove menu bar
+set guioptions-=T  "remove toolbar
+set guioptions-=r  "remove right-hand scroll bar
+set guioptions-=L  "remove left-hand scroll bar
+set guiheadroom=0
+
+" Colorscheme settings
+let g:jellybeans_use_term_italics = 1
+let g:jellybeans_use_gui_italics = 1
+" change background color to match terminal
+"let g:jellybeans_overrides = {
+"\    'background': { 'guibg': '000000' },
+"\}
+
+" Highlight IP addresses
+syn match ipaddr /\(\(25\_[0-5]\|2\_[0-4]\_[0-9]\|\_[01]\?\_[0-9]\_[0-9]\?\)\.\)\{3\}\(25\_[0-5]\|2\_[0-4]\_[0-9]\|\_[01]\?\_[0-9]\_[0-9]\?\)/
+hi link ipaddr Identifier
+
+" Commenting/Uncommenting blocks of code.
+autocmd FileType c,cpp,java,scala            let b:comment_leader = '// '
+autocmd FileType sh,ruby,python,conf,fstab   let b:comment_leader = '# '
+autocmd FileType tex                         let b:comment_leader = '% '
+autocmd FileType mail                        let b:comment_leader = '> '
+autocmd FileType vim                         let b:comment_leader = '" '
+noremap <silent> ,cc :<C-B>silent <C-E>s/^/<C-R>=escape(b:comment_leader,'\/')<CR>/<CR>:nohlsearch<CR>
+noremap <silent> ,cu :<C-B>silent <C-E>s/^\V<C-R>=escape(b:comment_leader,'\/')<CR>//e<CR>:nohlsearch<CR>
+
+" status bar colors
+au InsertEnter * hi statusline guifg=black guibg=#d7afff ctermfg=black ctermbg=magenta
+au InsertLeave * hi statusline guifg=black guibg=#8fbfdc ctermfg=black ctermbg=cyan
+hi statusline guifg=black guibg=#8fbfdc ctermfg=black ctermbg=cyan
+
+" Status line
+" default: set statusline=%f\ %h%w%m%r\ %=%(%l,%c%V\ %=\ %P%)
+
+" Status Line Custom
+let g:currentmode={
+    \ 'n'  : 'Normal',
+    \ 'no' : 'Normal·Operator Pending',
+    \ 'v'  : 'Visual',
+    \ 'V'  : 'V·Line',
+    \ '^V' : 'V·Block',
+    \ 's'  : 'Select',
+    \ 'S'  : 'S·Line',
+    \ '^S' : 'S·Block',
+    \ 'i'  : 'Insert',
+    \ 'R'  : 'Replace',
+    \ 'Rv' : 'V·Replace',
+    \ 'c'  : 'Command',
+    \ 'cv' : 'Vim Ex',
+    \ 'ce' : 'Ex',
+    \ 'r'  : 'Prompt',
+    \ 'rm' : 'More',
+    \ 'r?' : 'Confirm',
+    \ '!'  : 'Shell',
+    \ 't'  : 'Terminal'
+    \}
+
+" Automatically change the statusline color depending on mode
+"function! ChangeStatuslineColor()
+"  if (mode() =~# '\v(n|no)')
+"    exe 'hi! StatusLine ctermbg=cyan'
+"  elseif (mode() =~# '\v(v|V)' || g:currentmode[mode()] ==# 'V·Block' || get(g:currentmode, mode(), '') ==# 't')
+"    exe 'hi! StatusLine ctermbg=yellow'
+"  else
+"    exe 'hi! StatusLine ctermbg=red'
+"  endif
+"
+"  return ''
+"endfunction
+
+set laststatus=2
+set statusline=
+"set statusline+=%{ChangeStatuslineColor()}               " Changing the statusline color
+set statusline+=%0*\ %n\                                 " Buffer number
+set statusline+=%1*\ %<%F%m%r%h%w\                       " File path, modified, readonly, helpfile, preview
+set statusline+=%3*│                                     " Separator
+set statusline+=%2*\ %Y\                                 " FileType
+set statusline+=%3*│                                     " Separator
+set statusline+=%2*\ %{''.(&fenc!=''?&fenc:&enc).''}     " Encoding
+set statusline+=\ (%{&ff})                               " FileFormat (dos/unix..)
+set statusline+=%=                                       " Right Side
+set statusline+=%2*\ col:\ %02v\                         " Colomn number
+set statusline+=%3*│                                     " Separator
+set statusline+=%1*\ ln:\ %02l/%L\ (%3p%%)\              " Line number / total lines, percentage of document
+set statusline+=%0*\ %{toupper(g:currentmode[mode()])}\  " The current mode
+
+hi User1 ctermfg=007 ctermbg=239 guibg=#4e4e4e guifg=#adadad
+hi User2 ctermfg=007 ctermbg=236 guibg=#303030 guifg=#adadad
+hi User3 ctermfg=236 ctermbg=236 guibg=#303030 guifg=#303030
+hi User4 ctermfg=239 ctermbg=239 guibg=#4e4e4e guifg=#4e4e4e
