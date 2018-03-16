@@ -51,6 +51,7 @@ set foldlevelstart=4
 set foldnestmax=12
 set foldmethod=indent
 
+" Undo even after closing and opening a file
 if has('persistent_undo')
     set undodir=$HOME/.vim/undo
     set undofile
@@ -95,7 +96,7 @@ map <F5> :setlocal spell! spelllang=en_us<CR>
 nnoremap <leader>S :%s/\s\+$//<cr>:let @/=''<CR>
 
 " Gvim settings
-set guifont=Fira\ Mono\ 12
+set guifont=Fira\ Mono\ 10
 
 set guioptions-=m  "remove menu bar
 set guioptions-=T  "remove toolbar
@@ -106,6 +107,7 @@ set guiheadroom=0
 " Colorscheme settings
 let g:jellybeans_use_term_italics = 1
 let g:jellybeans_use_gui_italics = 1
+let g:jellybeans_use_term_bold = 1
 " change background color to match terminal
 "let g:jellybeans_overrides = {
 "\    'background': { 'guibg': '000000' },
@@ -123,6 +125,21 @@ autocmd FileType mail                        let b:comment_leader = '> '
 autocmd FileType vim                         let b:comment_leader = '" '
 noremap <silent> ,cc :<C-B>silent <C-E>s/^/<C-R>=escape(b:comment_leader,'\/')<CR>/<CR>:nohlsearch<CR>
 noremap <silent> ,cu :<C-B>silent <C-E>s/^\V<C-R>=escape(b:comment_leader,'\/')<CR>//e<CR>:nohlsearch<CR>
+
+" Change the cursor color and style on mode change
+set gcr=a:block
+set gcr+=o:hor50-Cursor
+set gcr+=n:Cursor
+set gcr+=i-ci-sm:InsertCursor
+set gcr+=r-cr:ReplaceCursor-hor20
+set gcr+=c:CommandCursor
+set gcr+=v-ve:VisualCursor
+set gcr+=a:blinkon0
+
+hi InsertCursor guifg=black guibg=#d7afff ctermfg=black ctermbg=magenta
+hi VisualCursor guifg=black guibg=#d7afff ctermfg=black ctermbg=yellow
+hi ReplaceCursor guifg=black guibg=#d75f5f ctermfg=black ctermbg=darkred
+hi CommandCursor guifg=black guibg=#8fbfdc ctermfg=black ctermbg=cyan
 
 " status bar colors
 au InsertEnter * hi statusline guifg=black guibg=#d7afff ctermfg=black ctermbg=magenta
@@ -155,34 +172,37 @@ let g:currentmode={
     \ 't'  : 'Terminal'
     \}
 
-" Automatically change the statusline color depending on mode
+"" Automatically change the statusline color depending on mode - doesn't update until cursor changes position
 "function! ChangeStatuslineColor()
-"  if (mode() =~# '\v(n|no)')
-"    exe 'hi! StatusLine ctermbg=cyan'
-"  elseif (mode() =~# '\v(v|V)' || g:currentmode[mode()] ==# 'V·Block' || get(g:currentmode, mode(), '') ==# 't')
-"    exe 'hi! StatusLine ctermbg=yellow'
-"  else
-"    exe 'hi! StatusLine ctermbg=red'
-"  endif
-"
-"  return ''
+"    if (mode() =~# '\v(n|no)')
+"        exe 'hi! statusline guifg=black guibg=#8fbfdc ctermfg=black ctermbg=cyan'
+"    elseif (mode() =~# '\v(v|V)' || g:currentmode[mode()] ==# 'V·Block')
+"        exe 'hi! statusline guifg=black guibg=#d7afff ctermfg=black ctermbg=yellow'
+"    elseif (mode() ==# 'R')
+"        exe 'hi! statusline guifg=black guibg=#d75f5f ctermfg=black ctermbg=darkred'
+"    elseif (mode() ==# 'i')
+"        exe 'hi! statusline guifg=black guibg=#d7afff ctermfg=black ctermbg=magenta'
+"    elseif
+"        exe 'hi! statusline guifg=black guibg=#8fbfdc ctermfg=black ctermbg=cyan'
+"    endif
+"    return ''
 "endfunction
 
 set laststatus=2
 set statusline=
-"set statusline+=%{ChangeStatuslineColor()}               " Changing the statusline color
-set statusline+=%0*\ %n\                                 " Buffer number
-set statusline+=%1*\ %<%F%m%r%h%w\                       " File path, modified, readonly, helpfile, preview
-set statusline+=%3*│                                     " Separator
-set statusline+=%2*\ %Y\                                 " FileType
-set statusline+=%3*│                                     " Separator
-set statusline+=%2*\ %{''.(&fenc!=''?&fenc:&enc).''}     " Encoding
-set statusline+=\ (%{&ff})                               " FileFormat (dos/unix..)
-set statusline+=%=                                       " Right Side
-set statusline+=%2*\ col:\ %02v\                         " Colomn number
-set statusline+=%3*│                                     " Separator
-set statusline+=%1*\ ln:\ %02l/%L\ (%3p%%)\              " Line number / total lines, percentage of document
-set statusline+=%0*\ %{toupper(g:currentmode[mode()])}\  " The current mode
+"set statusline+=%{ChangeStatuslineColor()}                  " Changing the statusline color
+set statusline+=%0*\ %n\                                    " Buffer number
+set statusline+=%1*\ %<%F%m%r%h%w\                          " File path, modified, readonly, helpfile, preview
+set statusline+=%3*│                                        " Separator
+set statusline+=%2*\ %Y\                                    " FileType
+set statusline+=%3*│                                        " Separator
+set statusline+=%2*\ %{''.(&fenc!=''?&fenc:&enc).''}        " Encoding
+set statusline+=\ (%{&ff})                                  " FileFormat (dos/unix..)
+set statusline+=%=                                          " Right Side
+set statusline+=%2*\ col:\ %02v\                            " Colomn number
+set statusline+=%3*│                                        " Separator
+set statusline+=%1*\ ln:\ %02l/%L\ (%3p%%)\                 " Line number / total lines, percentage of document
+set statusline+=%0*\ %{toupper(g:currentmode[mode()])}\ %*  " The current mode
 
 hi User1 ctermfg=007 ctermbg=239 guibg=#4e4e4e guifg=#adadad
 hi User2 ctermfg=007 ctermbg=236 guibg=#303030 guifg=#adadad
