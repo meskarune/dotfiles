@@ -1,0 +1,61 @@
+-- vim: ts=4 sw=4 noet ai cindent syntax=lua
+conky.config = {
+    alignment = 'top_right',
+    background = false,
+    border_width = 0,
+    cpu_avg_samples = 2,
+    default_color = 'cccccc',
+    color1 = '86b5ea',
+    default_outline_color = 'cccccc',
+    default_shade_color = '7a999c',
+    double_buffer = true,
+    draw_borders = false,
+    draw_graph_borders = false,
+    draw_outline = false,
+    draw_shades = false,
+    use_xft = true,
+    font = 'Fira Mono:normal:size=14',
+    gap_x = 10,
+    gap_y = 41,
+    minimum_height = 5,
+    minimum_width = 21,
+    maximum_width = 238,
+    net_avg_samples = 2,
+    no_buffers = true,
+    out_to_console = false,
+    out_to_stderr = false,
+    extra_newline = false,
+    own_window = true,
+    own_window_class = 'Conky',
+    own_window_transparent = true,
+    own_window_type = 'desktop',
+    --own_window_argb_value = 120,
+    --own_window_color = '000000',
+    stippled_borders = 0,
+    update_interval = 1.0,
+    uppercase = false,
+    use_spacer = 'none',
+    show_graph_scale = false,
+    show_graph_range = false,
+    mpd_host = "localhost",
+    mpd_port = 46600
+}
+
+-- ${font Sans:normal:size=7}${color1}${exec dmesg | uniq | tail -n 15}
+
+conky.text = [[
+ ${alignc}${font :size=28}${time %k:%M %p}${font}
+
+${execpi 3600 ~/.config/conky/cal.lua}
+${alignc}──────────
+ ${alignc}${execpi 1800 ~/.config/conky/weather.lua}
+
+${alignc}──────────
+
+${if_mpd_playing}${alignc}${color1}Now Playing${color}
+
+${mpd_artist}
+${font Symbola:size=14}★${font} ${font size=10}${mpd_album} [${mpd_date}]${font}
+${font Symbola:size=28}𝅘𝅥𝅮${font} ${font size=10}${mpd_title}${font}
+${alignc}${mpd_bar 3, 120} ${font size=10}${voffset -2}${mpd_elapsed} / ${mpd_length}${font}${endif}
+]]
