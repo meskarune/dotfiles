@@ -6,12 +6,19 @@ else
     ssh-agent -a /tmp/$USER.agent > /dev/null 2>&1
 fi
 
+path+=('/home/meskarune/scripts')
+export PATH
 export LANG="en_US.UTF-8"
 export TZ="/usr/share/zoneinfo/America/New_York"
 export EDITOR="vim"
-export PATH="$PATH:/home/meskarune/scripts"
+export BROWSER="elinks"
 
 export VIRTUAL_ENV_DISABLE_PROMPT=1
+
+if [[ -f /usr/bin/source-highlight-esc.sh ]]; then
+    export LESSOPEN="| /usr/bin/source-highlight-esc.sh %s"
+    export LESS=' -R '
+fi
 
 # Less colors for man pages
 export LESS_TERMCAP_mb=$'\E[01;31m'
