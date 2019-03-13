@@ -153,12 +153,12 @@ hi statusline guifg=black guibg=#8fbfdc ctermfg=black ctermbg=cyan
 let g:currentmode={
     \ 'n'  : 'Normal',
     \ 'no' : 'Normal·Operator Pending',
-    \ 'v'  : 'Visual',
-    \ 'V'  : 'V·Line',
-    \ '^V' : 'V·Block',
+    \ 'v' : 'Visual',
+    \ 'V' : 'V·Line',
+    \ "\<c-V>" : 'V·Block',
     \ 's'  : 'Select',
     \ 'S'  : 'S·Line',
-    \ '^S' : 'S·Block',
+    \ "\<c-S>" : 'S·Block',
     \ 'i'  : 'Insert',
     \ 'R'  : 'Replace',
     \ 'Rv' : 'V·Replace',
@@ -172,25 +172,25 @@ let g:currentmode={
     \ 't'  : 'Terminal'
     \}
 
-"" Automatically change the statusline color depending on mode - doesn't update until cursor changes position
-"function! ChangeStatuslineColor()
-"    if (mode() =~# '\v(n|no)')
-"        exe 'hi! statusline guifg=black guibg=#8fbfdc ctermfg=black ctermbg=cyan'
-"    elseif (mode() =~# '\v(v|V)' || g:currentmode[mode()] ==# 'V·Block')
-"        exe 'hi! statusline guifg=black guibg=#d7afff ctermfg=black ctermbg=yellow'
-"    elseif (mode() ==# 'R')
-"        exe 'hi! statusline guifg=black guibg=#d75f5f ctermfg=black ctermbg=darkred'
-"    elseif (mode() ==# 'i')
-"        exe 'hi! statusline guifg=black guibg=#d7afff ctermfg=black ctermbg=magenta'
-"    elseif
-"        exe 'hi! statusline guifg=black guibg=#8fbfdc ctermfg=black ctermbg=cyan'
-"    endif
-"    return ''
-"endfunction
+" Automatically change the statusline color depending on mode - doesn't update until cursor changes position
+function! ChangeStatuslineColor()
+    if (mode() =~# '\v(n|no)')
+        exe 'hi! statusline guifg=black guibg=#8fbfdc ctermfg=black ctermbg=cyan'
+    elseif (mode() =~# '\v(v|V)' || g:currentmode[mode()] ==# 'V·Block')
+        exe 'hi! statusline guifg=black guibg=#d7afff ctermfg=black ctermbg=yellow'
+    elseif (mode() ==# 'R')
+        exe 'hi! statusline guifg=black guibg=#d75f5f ctermfg=black ctermbg=darkred'
+    elseif (mode() ==# 'i')
+        exe 'hi! statusline guifg=black guibg=#d7afff ctermfg=black ctermbg=magenta'
+    elseif
+        exe 'hi! statusline guifg=black guibg=#8fbfdc ctermfg=black ctermbg=cyan'
+    endif
+    return ''
+endfunction
 
 set laststatus=2
 set statusline=
-"set statusline+=%{ChangeStatuslineColor()}                  " Changing the statusline color
+set statusline+=%{ChangeStatuslineColor()}                  " Changing the statusline color
 set statusline+=%0*\ %n\                                    " Buffer number
 set statusline+=%1*\ %<%F%m%r%h%w\                          " File path, modified, readonly, helpfile, preview
 set statusline+=%3*│                                        " Separator
